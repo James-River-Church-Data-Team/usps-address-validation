@@ -1,0 +1,48 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0" version="28.2.8">
+  <diagram name="Page-1" id="Nw9qAy2xmmjh_PmX29HH">
+    <mxGraphModel dx="1418" dy="756" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="h-XOzHjG0qp9GvL0UO8M-1" target="h-XOzHjG0qp9GvL0UO8M-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-5" value="Sends: click events" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="h-XOzHjG0qp9GvL0UO8M-4">
+          <mxGeometry x="-0.3027" y="-21" relative="1" as="geometry">
+            <mxPoint x="-11" y="24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-1" value="Indicator&lt;div&gt;- Writes itself to the page&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="180" y="380" width="140" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;curved=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="h-XOzHjG0qp9GvL0UO8M-1" target="h-XOzHjG0qp9GvL0UO8M-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="610" />
+              <mxPoint x="660" y="610" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-11" value="Sends:&lt;br&gt;Validation result messages&lt;br&gt;Standard format, canonical addresses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="h-XOzHjG0qp9GvL0UO8M-9">
+          <mxGeometry x="-0.0081" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-2" value="Validator&lt;div&gt;- Validates addresses&lt;/div&gt;&lt;div&gt;- Handles all the networking&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="370" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" edge="1" parent="1" source="h-XOzHjG0qp9GvL0UO8M-3" target="h-XOzHjG0qp9GvL0UO8M-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-7" value="Sends: standard format, but unrefined, addresses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="h-XOzHjG0qp9GvL0UO8M-6">
+          <mxGeometry x="0.2286" y="-17" relative="1" as="geometry">
+            <mxPoint x="7" y="28" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h-XOzHjG0qp9GvL0UO8M-3" value="Controller&lt;div&gt;- Reads addresses from the page in many formats&lt;/div&gt;&lt;div&gt;- Entry point&lt;/div&gt;&lt;div&gt;- Redirects&lt;/div&gt;&lt;div&gt;- Writes addresses to form fields&lt;/div&gt;" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="130" width="190" height="130" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
