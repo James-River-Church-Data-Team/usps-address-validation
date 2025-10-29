@@ -86,8 +86,8 @@ class Validator {
 		NOT_IMPL: 5,
 	});
 
-	static #USPS_API_CLIENT_ID = "{{ USPS_API_CLIENT_ID }}";
-	static #USPS_API_CLIENT_SECRET = "{{ USPS_API_CLIENT_SECRET }}";
+	static #USPS_API_CLIENT_ID = "{{ site.env.USPS_API_CLIENT_ID }}";
+	static #USPS_API_CLIENT_SECRET = "{{ site.env.USPS_API_CLIENT_SECRET }}";
 
 	static #DEFAULT_BACKOFF = 4000;
 	static #backoff = DEFAULT_BACKOFF;
