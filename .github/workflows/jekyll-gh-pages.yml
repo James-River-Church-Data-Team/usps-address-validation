@@ -35,6 +35,9 @@ jobs:
         with:
           source: ./
           destination: ./_site
+        env:
+          USPS_API_CLIENT_ID: ${{ secrets.USPS_API_CLIENT_ID }}
+          USPS_API_CLIENT_SECRET: ${{ secrets.USPS_API_CLIENT_SECRET }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
