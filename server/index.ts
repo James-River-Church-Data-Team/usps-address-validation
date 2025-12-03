@@ -104,7 +104,10 @@ app.get("/",
 	(req, _, next) => {
 		if (
 			req.socket.remoteAddress === undefined
-			|| !ALLOWED_IPS.includes(req.socket.remoteAddress)
+			|| (
+				ALLOWED_IPS.length > 0
+				&& !ALLOWED_IPS.includes(req.socket.remoteAddress)
+			)
 		) {
 			return;
 		}
