@@ -33,8 +33,8 @@ export class TokenHolder {
 			body: JSON.stringify({
 				grant_type: "client_credentials",
 				scope: "addresses",
-				client_id:     process.env.CLIENT_ID,
-				client_secret: process.env.CLIENT_SECRET,
+				client_id:     process.env.USPS_CLIENT_ID,
+				client_secret: process.env.USPS_CLIENT_SECRET,
 			}),
 		});
 		switch (response.status) {

@@ -52,11 +52,11 @@ const ALLOWED_IPS: string[] = (() => {
 	}
 	return arr;
 })();
-if (process.env.CLIENT_ID === undefined) {
-	errors.push(new Error("Missing env var CLIENT_ID"));
+if (process.env.USPS_CLIENT_ID === undefined) {
+	errors.push(new Error("Missing env var USPS_CLIENT_ID"));
 }
-if (process.env.CLIENT_SECRET === undefined) {
-	errors.push(new Error("Missing env var CLIENT_SECRET"));
+if (process.env.USPS_CLIENT_SECRET === undefined) {
+	errors.push(new Error("Missing env var USPS_CLIENT_SECRET"));
 }
 if (process.env.ALLOW_ORIGIN === undefined) {
 	errors.push(new Error("Missing env var ALLOW_ORIGIN"));
