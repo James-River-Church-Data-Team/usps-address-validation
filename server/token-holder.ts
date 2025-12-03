@@ -1,7 +1,5 @@
 import { backOff } from "exponential-backoff";
-
-
-class YouShouldRetry extends Error {}
+import { ShouldRetry } from "./common.js";
 
 
 export class TokenHolder {
@@ -16,9 +14,7 @@ export class TokenHolder {
 
 	async #regenerateToken(): Promise<string> {
 		return backOff(this.#_regenerateToken.bind(this), {
-			retry(err) {
-				return err instanceof YouShouldRetry;
-			},
+			retry: (err) => err instanceof ShouldRetry,
 		});
 	}
 
@@ -42,7 +38,7 @@ export class TokenHolder {
 				break;
 			case 429:
 			case 503:
-				throw new YouShouldRetry();
+				throw new ShouldRetry();
 			default:
 				throw new Error(`${response.status} ${response.statusText}`);
 		}
