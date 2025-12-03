@@ -203,12 +203,16 @@ app.get("/",
 			return;
 		}
 
-		// Cache the USPS response if 2xx
-		if (uspsRes.status >= 200 && uspsRes.status < 300) {
+		// Cache the USPS response if 2xx or 400
+		if (
+			uspsRes.status >= 200 && uspsRes.status < 300
+			// If an address is invalid, it's not going to become valid in two hours
+			|| uspsRes.status === 400
+		) {
 			cache.set(queryString, uspsBody);
 			console.log(" ** Stored to cache");
 		} else {
-			console.log(" ** Response was not 2xx; not caching");
+			console.log(" ** Response was not 2xx or 400; not caching");
 		}
 
 		// Set CORS headers on our own response
