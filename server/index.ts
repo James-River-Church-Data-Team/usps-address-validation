@@ -138,14 +138,17 @@ app.get("/",
 	val.query("ZIPCode")      .notEmpty().isNumeric({ no_symbols: true }),
 	val.query("ZIPPlu4")      .notEmpty().isNumeric({ no_symbols: true }),
 	(req, res, next) => {
+		console.log(` ** Query: ${req.query}`);
 		const err = val.validationResult(req);
-		if (!err.isEmpty()) return res.status(400).json(err.mapped());
+		if (!err.isEmpty()) {
+			console.log(" ** Invalid query");
+			res.status(400).json(err.mapped());
+			return;
+		}
 		next();
 	},
 
 	async (req, res) => {
-		console.log(` ** Query: ${req.query}`);
-
 		// Serialize query for our own purposes
 		const queryString = new URLSearchParams(req.query).toString();
 
