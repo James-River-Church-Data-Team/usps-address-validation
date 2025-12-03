@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express from "express";
 import { query } from "express-validator";
 import LRUMap_pkg from "lru_map";
