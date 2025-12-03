@@ -136,7 +136,8 @@ app.get("/",
 	val.query("city")         .notEmpty().isString(),
 	val.query("state")        .notEmpty().isString(),
 	(req, res, next) => {
-		console.log(` ** Query: ${req.query}`);
+		console.log(" ** Query:");
+		console.log(req.query);
 		const err = val.validationResult(req);
 		if (!err.isEmpty()) {
 			console.log(" ** Invalid query");
@@ -153,11 +154,13 @@ app.get("/",
 		// Short-circuit from cache
 		const cachedResponse = cache.get(queryString);
 		if (cachedResponse !== undefined) {
-			console.log(" ** Cache hit");
+			console.log(" ** Cache hit:");
 			console.debug(cachedResponse);
-			return res.json(cachedResponse);
+			res.json(cachedResponse);
+			console.log(" ** ✔ Resent cached response");
+			return;
 		}
-		console.log(" ** Cache miss");
+		console.log(" ** Cache miss; requesting from USPS");
 
 		// Forward the request to USPS
 		const uspsRes = await backOff(async () => {
@@ -195,6 +198,7 @@ app.get("/",
 		// Cache the USPS response if 2xx
 		if (uspsRes.status >= 200 && uspsRes.status < 300) {
 			cache.set(queryString, uspsBody);
+			console.log(" ** Stored to cache");
 		} else {
 			console.log(" ** Response was not 2xx; not caching");
 		}
@@ -207,6 +211,7 @@ app.get("/",
 
 		// Respond back to the user with USPS's response
 		res.json(uspsBody);
+		console.log(" ** ✔ Sent response");
 	},
 );
 
