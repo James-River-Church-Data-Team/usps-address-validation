@@ -23,6 +23,7 @@ export class TokenHolder {
 	}
 
 	async #_regenerateToken(): Promise<string> {
+		console.log(" ** Regenerating token");
 		const response = await fetch(
 			"https://apis.usps.com/oauth2/v3/token", {
 			method: "POST",
@@ -38,9 +39,11 @@ export class TokenHolder {
 		});
 		switch (response.status) {
 			case 200:
+				console.log("     ** Successfully regenerated token");
 				break;
 			case 429:
 			case 503:
+				console.warn(`    ** Received ${response.status}`);
 				throw new ShouldRetry();
 			default:
 				throw new Error(`${response.status} ${response.statusText}`);

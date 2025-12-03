@@ -106,6 +106,7 @@ const tokenHolder = new TokenHolder();
 
 app.get("/",
 	(req, _, next) => {
+		console.log(`Request from ${req.socket.remoteAddress}`);
 		if (
 			req.socket.remoteAddress === undefined
 			|| (
@@ -113,6 +114,7 @@ app.get("/",
 				&& !ALLOWED_IPS.includes(req.socket.remoteAddress)
 			)
 		) {
+			console.log(" ** Rejected");
 			return;
 		}
 		next();
@@ -128,10 +130,16 @@ app.get("/",
 	async (req, res) => {
 		// Serialize query for our own purposes
 		const queryString = new URLSearchParams(req.query).toString();
+		console.log(` ** Query: ${queryString}`);
 
 		// Short-circuit from cache
 		const cachedResponse = cache.get(queryString);
-		if (cachedResponse !== undefined) return res.json(cachedResponse);
+		if (cachedResponse !== undefined) {
+			console.log(" ** Cache hit");
+			console.debug(cachedResponse);
+			return res.json(cachedResponse);
+		}
+		console.log(" ** Cache miss");
 
 		// Forward the request to USPS
 		const uspsRes = await backOff(async () => {
@@ -146,6 +154,7 @@ app.get("/",
 				},
 			);
 			if (response.status === 401) {  // Unauthorized
+				console.warn(" ** USPS: Received Unauthorized");
 				tokenHolder.invalidate();
 				throw new ShouldRetry();
 			}
@@ -156,9 +165,11 @@ app.get("/",
 
 		// Parse the response from USPS
 		const uspsBody = await uspsRes.json();
+		console.debug(uspsBody);
 
 		// Make sure the USPS response looks as we expect
 		if (!validateUspsResponse(uspsBody)) {
+			console.error(" ** Unrecognized response from USPS");
 			res.sendStatus(502);  // Bad Gateway
 			return;
 		}
@@ -166,6 +177,8 @@ app.get("/",
 		// Cache the USPS response if 2xx
 		if (uspsRes.status >= 200 && uspsRes.status < 300) {
 			cache.set(queryString, uspsBody);
+		} else {
+			console.log(" ** Response was not 2xx; not caching");
 		}
 
 		// Set CORS headers on our own response
