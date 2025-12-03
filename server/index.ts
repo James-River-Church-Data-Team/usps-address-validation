@@ -135,8 +135,6 @@ app.get("/",
 	val.query("streetAddress").notEmpty().isString(),
 	val.query("city")         .notEmpty().isString(),
 	val.query("state")        .notEmpty().isString(),
-	val.query("ZIPCode")      .notEmpty().isNumeric({ no_symbols: true }),
-	val.query("ZIPPlu4")      .notEmpty().isNumeric({ no_symbols: true }),
 	(req, res, next) => {
 		console.log(` ** Query: ${req.query}`);
 		const err = val.validationResult(req);
