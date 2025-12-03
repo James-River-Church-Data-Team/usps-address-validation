@@ -1,5 +1,5 @@
 import express from "express";
-import { query } from "express-validator";
+import val from "express-validator";
 import { backOff } from "exponential-backoff";
 import LRUMap_pkg from "lru_map";
 import { ShouldRetry } from "./common.js";
@@ -121,16 +121,22 @@ app.get("/",
 	},
 
 	// Validate query params
-	query("streetAddress").isString(),
-	query("city").isString(),
-	query("state").isString(),
-	query("zip").isString(),
-	query("country").isString(),
+	val.query("streetAddress").notEmpty().isString(),
+	val.query("city")         .notEmpty().isString(),
+	val.query("state")        .notEmpty().isString(),
+	val.query("ZIPCode")      .notEmpty().isNumeric({ no_symbols: true }),
+	val.query("ZIPPlu4")      .notEmpty().isNumeric({ no_symbols: true }),
+	(req, res, next) => {
+		const err = val.validationResult(req);
+		if (!err.isEmpty()) return res.status(400).json(err.mapped());
+		next();
+	},
 
 	async (req, res) => {
+		console.log(` ** Query: ${req.query}`);
+
 		// Serialize query for our own purposes
 		const queryString = new URLSearchParams(req.query).toString();
-		console.log(` ** Query: ${queryString}`);
 
 		// Short-circuit from cache
 		const cachedResponse = cache.get(queryString);
