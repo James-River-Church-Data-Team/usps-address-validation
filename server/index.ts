@@ -8,7 +8,9 @@ import { TokenHolder } from "./token-holder.js";
 const { LRUMap } = LRUMap_pkg;
 
 
-const port = process.env.PORT ?? 10_000;
+const port = process.env.PORT !== undefined
+	? parseInt(process.env.PORT)
+	: 10_000;
 
 // 50,000: I expect response bodies to be ~1kb each, so this should take about
 // up to 50MB of RAM.
@@ -178,4 +180,4 @@ app.get("/",
 );
 
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(port, "0.0.0.0", () => console.log(`Listening on port ${port}`));
