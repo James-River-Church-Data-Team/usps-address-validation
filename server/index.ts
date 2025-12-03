@@ -93,9 +93,20 @@ interface USPSResBody {
 function validateUspsResponse(uspsBody: unknown): uspsBody is USPSResBody {
 	return typeof uspsBody === "object"
 		&& uspsBody !== null
-		&& "address" in uspsBody
-		&& "corrections" in uspsBody
-		&& "matches" in uspsBody;
+		&& (
+			(
+				"address" in uspsBody
+				&& "corrections" in uspsBody
+				&& "matches" in uspsBody
+			) || (
+				"error" in uspsBody
+				&& typeof uspsBody.error === "object"
+				&& uspsBody.error !== null
+				&& "code" in uspsBody.error
+				&& "message" in uspsBody.error
+				&& "errors" in uspsBody.error
+			)
+		);
 }
 
 
