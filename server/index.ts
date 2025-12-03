@@ -146,7 +146,7 @@ app.get("/",
 
 		// Make sure the USPS response looks as we expect
 		if (!validateUspsResponse(uspsBody)) {
-			res.sendStatus(502);
+			res.sendStatus(502);  // Bad Gateway
 			return;
 		}
 
