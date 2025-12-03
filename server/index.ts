@@ -1,6 +1,8 @@
 import express from "express";
 import { query } from "express-validator";
+import { backOff } from "exponential-backoff";
 import LRUMap_pkg from "lru_map";
+import { ShouldRetry } from "./common.js";
 import { TokenHolder } from "./token-holder.js";
 
 const { LRUMap } = LRUMap_pkg;
@@ -130,16 +132,25 @@ app.get("/",
 		if (cachedResponse !== undefined) return res.json(cachedResponse);
 
 		// Forward the request to USPS
-		const accessToken = await tokenHolder.fetch();
-		const uspsRes = await fetch(
-			`https://apis.usps.com/addresses/v3/address?${queryString}`,
-			{
-				headers: {
-					"Authorization": `Bearer ${accessToken}`,
-					"Accept": "application/json",
+		const uspsRes = await backOff(async () => {
+			const accessToken = await tokenHolder.fetch();
+			const response = await fetch(
+				`https://apis.usps.com/addresses/v3/address?${queryString}`,
+				{
+					headers: {
+						"Authorization": `Bearer ${accessToken}`,
+						"Accept": "application/json",
+					},
 				},
-			},
-		);
+			);
+			if (response.status === 401) {  // Unauthorized
+				tokenHolder.invalidate();
+				throw new ShouldRetry();
+			}
+			return response;
+		}, {
+			retry: (err) => err instanceof ShouldRetry,
+		});
 
 		// Parse the response from USPS
 		const uspsBody = await uspsRes.json();

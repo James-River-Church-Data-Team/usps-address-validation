@@ -12,6 +12,10 @@ export class TokenHolder {
 		return this.#accessToken;
 	}
 
+	invalidate(): void {
+		this.#accessToken = null;
+	}
+
 	async #regenerateToken(): Promise<string> {
 		return backOff(this.#_regenerateToken.bind(this), {
 			retry: (err) => err instanceof ShouldRetry,
