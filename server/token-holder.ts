@@ -19,7 +19,6 @@ export class TokenHolder {
 	}
 
 	async #_regenerateToken(): Promise<string> {
-		console.trace();
 		const response = await fetch(
 			"https://apis.usps.com/oauth2/v3/token", {
 			method: "POST",
@@ -43,7 +42,6 @@ export class TokenHolder {
 				throw new Error(`${response.status} ${response.statusText}`);
 		}
 		const json = await response.json();
-		console.debug(json);
 		if (
 			typeof json !== "object"
 			|| json === null
