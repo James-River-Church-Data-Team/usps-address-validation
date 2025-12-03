@@ -22,6 +22,7 @@
   "type": "module",
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jqueryui": "^1.12.24",
     "@types/node": "^24.10.1",
     "typescript": "^5.9.3"
   }
