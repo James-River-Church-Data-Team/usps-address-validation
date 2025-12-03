@@ -131,13 +131,21 @@ app.get("/",
 		next();
 	},
 
+	(req, _, next) => {
+		if (req.query === undefined || Object.keys(req.query).length > 0) {
+			console.log(" ** Query:");
+			console.log(req.query);
+		} else {
+			console.log(" ** Query: [empty]");
+		}
+		next();
+	},
+
 	// Validate query params
 	val.query("streetAddress").notEmpty().isString(),
 	val.query("city")         .notEmpty().isString(),
 	val.query("state")        .notEmpty().isString(),
 	(req, res, next) => {
-		console.log(" ** Query:");
-		console.log(req.query);
 		const err = val.validationResult(req);
 		if (!err.isEmpty()) {
 			console.log(" ** Invalid query");
