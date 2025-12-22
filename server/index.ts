@@ -81,6 +81,15 @@ app.get("/",
 		next();
 	},
 
+	// Set CORS headers
+	(_, res, next) => {
+		res.header("Access-Control-Allow-Origin", ALLOW_ORIGIN);
+		res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		// I *believe* we just need the default allowlist
+		// res.header("Access-Control-Allow-Headers", "*");
+		next();
+	},
+
 	// Validate query params
 	val.query("streetAddress").notEmpty().isString(),
 	val.query("city").notEmpty().isString(),
@@ -155,12 +164,6 @@ app.get("/",
 		} else {
 			console.log(" ** Response was not 2xx or 400; not caching");
 		}
-
-		// Set CORS headers on our own response
-		res.header("Access-Control-Allow-Origin", process.env.ALLOW_ORIGIN);
-		res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-		// I *believe* we just need the default allowlist
-		// res.header("Access-Control-Allow-Headers", "*");
 
 		// Respond back to the user with USPS's response
 		res.json(uspsBody);
