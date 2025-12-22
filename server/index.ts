@@ -54,6 +54,7 @@ const tokenHolder = new TokenHolder();
 
 
 app.get("/",
+	// Firewall
 	(req, _, next) => {
 		console.log(`Request from ${req.socket.remoteAddress}`);
 		if (
@@ -69,6 +70,7 @@ app.get("/",
 		next();
 	},
 
+	// Logging that needs to be done even on invalid queries
 	(req, _, next) => {
 		if (req.query === undefined || Object.keys(req.query).length > 0) {
 			console.log(" ** Query:");
