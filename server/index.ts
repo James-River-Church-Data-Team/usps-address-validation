@@ -81,8 +81,8 @@ app.get("/",
 
 	// Validate query params
 	val.query("streetAddress").notEmpty().isString(),
-	val.query("city")         .notEmpty().isString(),
-	val.query("state")        .notEmpty().isString(),
+	val.query("city").notEmpty().isString(),
+	val.query("state").notEmpty().isString(),
 	(req, res, next) => {
 		const err = val.validationResult(req);
 		if (!err.isEmpty()) {
@@ -144,7 +144,8 @@ app.get("/",
 		// Cache the USPS response if 2xx or 400
 		if (
 			uspsRes.status >= 200 && uspsRes.status < 300
-			// If an address is invalid, it's not going to become valid in two hours
+			// If an address is invalid, it's not going to become valid in
+			// two hours
 			|| uspsRes.status === 400
 		) {
 			cache.set(queryString, uspsBody);
