@@ -1,12 +1,12 @@
 import express from "express";
 import val from "express-validator";
 import { backOff } from "exponential-backoff";
-import LRUMap_pkg from "lru_map";
+import LRUMap_module from "lru_map";
 import { ShouldRetry } from "./common.js";
 import { TokenHolder } from "./token-holder.js";
 import { ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, PORT } from "./env.js";
 
-const { LRUMap } = LRUMap_pkg;
+const { LRUMap } = LRUMap_module;
 
 
 interface USPSResBody {
