@@ -4,71 +4,9 @@ import { backOff } from "exponential-backoff";
 import LRUMap_pkg from "lru_map";
 import { ShouldRetry } from "./common.js";
 import { TokenHolder } from "./token-holder.js";
+import { ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, PORT } from "./env.js";
 
 const { LRUMap } = LRUMap_pkg;
-
-
-const port = process.env.PORT !== undefined
-	? parseInt(process.env.PORT)
-	: 10_000;
-
-// 50,000: I expect response bodies to be ~1kb each, so this should take about
-// up to 50MB of RAM.
-const CACHE_COUNT = process.env.CACHE_COUNT !== undefined
-	? parseInt(process.env.CACHE_COUNT)
-	: 50_000;
-
-const errors: Error[] = [];
-const ALLOWED_IPS: string[] = (() => {
-	if (process.env.ALLOWED_IPS === undefined) return [];
-	let arr: unknown;
-	try {
-		arr = JSON.parse(process.env.ALLOWED_IPS);
-	} catch (err) {
-		if (err instanceof Error) {
-			errors.push(err);
-		} else if (typeof err === "string") {
-			errors.push(new Error(err));
-		} else {
-			errors.push(
-				new Error(
-					"Env var ALLOWED_IPS: JSON.parse() catastrophic failure"
-				)
-			);
-		}
-		return [];
-	}
-	if (!(arr instanceof Array)) {
-		errors.push(new Error(
-			"Env var ALLOWED_IPS must be a JSON array of strings")
-		);
-		return [];
-	}
-	for (let i = 0; i < arr.length; i++) {
-		if (typeof arr[i] !== "string") {
-			errors.push(
-				new Error(
-					`Env var ALLOWED_IPS: entry at index ${i} is not a string`
-				)
-			);
-		}
-	}
-	return arr;
-})();
-if (process.env.USPS_CLIENT_ID === undefined) {
-	errors.push(new Error("Missing env var USPS_CLIENT_ID"));
-}
-if (process.env.USPS_CLIENT_SECRET === undefined) {
-	errors.push(new Error("Missing env var USPS_CLIENT_SECRET"));
-}
-if (process.env.ALLOW_ORIGIN === undefined) {
-	errors.push(new Error("Missing env var ALLOW_ORIGIN"));
-}
-if (errors.length > 0) {
-	const up = new AggregateError(errors);
-	for (const err of errors) console.error(err);
-	throw up;
-}
 
 
 interface USPSResBody {
@@ -228,4 +166,4 @@ app.get("/",
 );
 
 
-app.listen(port, "0.0.0.0", () => console.log(`Listening on port ${port}`));
+app.listen(PORT, "0.0.0.0", () => console.log(`Listening on port ${PORT}`));

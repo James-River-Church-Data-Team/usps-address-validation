@@ -1,5 +1,6 @@
 import { backOff } from "exponential-backoff";
 import { ShouldRetry } from "./common.js";
+import { USPS_CLIENT_ID, USPS_CLIENT_SECRET } from "./env.js";
 
 
 export class TokenHolder {
@@ -33,8 +34,8 @@ export class TokenHolder {
 			body: JSON.stringify({
 				grant_type: "client_credentials",
 				scope: "addresses",
-				client_id:     process.env.USPS_CLIENT_ID,
-				client_secret: process.env.USPS_CLIENT_SECRET,
+				client_id:     USPS_CLIENT_ID,
+				client_secret: USPS_CLIENT_SECRET,
 			}),
 		});
 		switch (response.status) {
