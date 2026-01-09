@@ -121,19 +121,19 @@ app.get("/",
 
 		// Forward the request to USPS
 		const uspsRes = await backOff(async () => {
-			const accessToken = await tokenHolder.fetch();
+			const token = await tokenHolder.fetch();
 			const response = await fetch(
 				`https://apis.usps.com/addresses/v3/address?${queryString}`,
 				{
 					headers: {
-						"Authorization": `Bearer ${accessToken}`,
+						"Authorization": `Bearer ${token.data}`,
 						"Accept": "application/json",
 					},
 				},
 			);
 			if (response.status === 401) {  // Unauthorized
 				console.warn(" ** USPS: Received Unauthorized");
-				tokenHolder.invalidate();
+				tokenHolder.invalidate(token.id);
 				throw new ShouldRetry();
 			}
 			return response;
