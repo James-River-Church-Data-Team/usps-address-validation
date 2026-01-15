@@ -1,12 +1,10 @@
 import express from "express";
 import val from "express-validator";
 import { backOff } from "exponential-backoff";
-import LRUMap_module from "lru_map";
+import { LRUMap } from "lru_map";
 import { retryPolicy, ShouldRetry } from "./common.js";
 import { TokenHolder } from "./token-holder.js";
 import { ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, PORT } from "./env.js";
-
-const { LRUMap } = LRUMap_module;
 
 
 interface USPSResBody {
@@ -123,8 +121,7 @@ app.get("/",
 		const uspsRes = await backOff(async () => {
 			const token = await tokenHolder.fetch(req);
 			const response = await fetch(
-				`https://apis.usps.com/addresses/v3/address?${queryString}`,
-				{
+				`https://apis.usps.com/addresses/v3/address?${queryString}`, {
 					headers: {
 						"Authorization": `Bearer ${token.data}`,
 						"Accept": "application/json",
