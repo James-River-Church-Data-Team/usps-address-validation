@@ -1,5 +1,6 @@
+import type { ExpressRequest } from "./common.js";
 import { backOff } from "exponential-backoff";
-import { ShouldRetry } from "./common.js";
+import { retryPolicy, ShouldRetry } from "./common.js";
 import { USPS_CLIENT_IDS, USPS_CLIENT_SECRETS } from "./env.js";
 
 
@@ -12,9 +13,9 @@ export class TokenHolder {
 	#tokens: (string | null)[] = [];
 	#index: number = 0;
 
-	async fetch(): Promise<Token> {
+	async fetch(req: ExpressRequest): Promise<Token> {
 		const data = this.#tokens[this.#index]
-			?? await TokenHolder.#regenerateToken(this.#index);
+			?? await TokenHolder.#regenerateToken(req, this.#index);
 		this.#tokens[this.#index] = data;
 		const result = { id: this.#index, data };
 		this.#index = (this.#index + 1) % USPS_CLIENT_IDS.length;
@@ -25,10 +26,14 @@ export class TokenHolder {
 		this.#tokens[id] = null;
 	}
 
-	static async #regenerateToken(id: number): Promise<string> {
-		return backOff(() => TokenHolder.#_regenerateToken(id), {
-			retry: (err) => err instanceof ShouldRetry,
-		});
+	static async #regenerateToken(
+		req: ExpressRequest,
+		id: number
+	): Promise<string> {
+		return backOff(
+			() => TokenHolder.#_regenerateToken(id),
+			{ retry: retryPolicy(req) }
+		);
 	}
 
 	static async #_regenerateToken(id: number): Promise<string> {
