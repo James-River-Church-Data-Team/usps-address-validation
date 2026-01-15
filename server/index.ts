@@ -2,7 +2,7 @@ import express from "express";
 import val from "express-validator";
 import { backOff } from "exponential-backoff";
 import LRUMap_module from "lru_map";
-import { ShouldRetry } from "./common.js";
+import { retryPolicy, ShouldRetry } from "./common.js";
 import { TokenHolder } from "./token-holder.js";
 import { ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, PORT } from "./env.js";
 
@@ -121,7 +121,7 @@ app.get("/",
 
 		// Forward the request to USPS
 		const uspsRes = await backOff(async () => {
-			const token = await tokenHolder.fetch();
+			const token = await tokenHolder.fetch(req);
 			const response = await fetch(
 				`https://apis.usps.com/addresses/v3/address?${queryString}`,
 				{
@@ -137,9 +137,7 @@ app.get("/",
 				throw new ShouldRetry();
 			}
 			return response;
-		}, {
-			retry: (err) => err instanceof ShouldRetry,
-		});
+		}, { retry: retryPolicy(req) });
 
 		// Parse the response from USPS
 		const uspsBody = await uspsRes.json();
