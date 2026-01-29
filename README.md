@@ -13,11 +13,12 @@ Parameters and response structure are the same as
 
 
 ## Environment variables
-| Name                 | Type       | Description                                                                                        | Required? | Default                 |
-| -------------------- | ---------- | -------------------------------------------------------------------------------------------------- | --------- | ----------------------- |
-| `USPS_CLIENT_ID`     | string     | USPS OAuth v2.0 client ID with address scope                                                       | Yes       |                         |
-| `USPS_CLIENT_SECRET` | string     | Client ID's secret                                                                                 | Yes       |                         |
-| `ALLOW_ORIGIN`       | string     | Access-Control-Allow-Origin header value                                                           | Yes       |                         |
-| `PORT`               | int        | Server port                                                                                        | No        | `10000`                 |
-| `CACHE_COUNT`        | int        | Number of successful USPS responses to cache                                                       | No        | 50,000                  |
-| `ALLOWED_IPS`        | `string[]` | JSON-formatted array of IP addresses (IPv4 and IPv6). Requests from all other IPs will be dropped. | No        | `[]` (All IP addresses) |
+| Name                  | Type       | Description                                                                                        | Required? | Default                 |
+| --------------------- | ---------- | -------------------------------------------------------------------------------------------------- | --------- | ----------------------- |
+| `USPS_CLIENT_IDS`     | `string[]` | JSON-formatted array of USPS OAuth v2.0 client IDs with address                                    | Yes       |                         |
+| `USPS_CLIENT_SECRETS` | `string[]` | JSON-formatted array of secrets in the same order as the client IDs                                | Yes       |                         |
+| `ALLOW_ORIGIN`        | `string`   | Access-Control-Allow-Origin header value                                                           | Yes       |                         |
+| `PORT`                | `int`      | Server port                                                                                        | No        | `10000`                 |
+| `CACHE_COUNT`         | `int`      | Number of successful USPS responses to cache                                                       | No        | 50,000                  |
+| `ALLOWED_IPS`         | `string[]` | JSON-formatted array of IP addresses (IPv4 and IPv6). Requests from all other IPs will be dropped. | No        | `[]` (All IP addresses) |
+| `ENABLE_LOGGING`      | `bool`     | Log traffic statistics.                                                                            | No        | false                   |
