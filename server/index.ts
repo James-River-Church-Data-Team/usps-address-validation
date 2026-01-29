@@ -4,10 +4,11 @@ import { backOff } from "exponential-backoff";
 import LRUMap_module from "lru_map";
 import { retryPolicy, ShouldRetry } from "./common.js";
 import { TokenHolder } from "./token-holder.js";
-import { ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, ENABLE_METRICS, PORT } from "./env.js";
+import {
+	ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, ENABLE_METRICS, PORT
+} from "./env.js";
 
 const { LRUMap } = LRUMap_module;
-
 
 interface USPSResBody {
 	address: {
@@ -26,6 +27,8 @@ interface USPSResBody {
 		text: string;
 	}[];
 }
+
+const MINUTE = 60 * 1_000;
 
 
 function validateUspsResponse(uspsBody: unknown): uspsBody is USPSResBody {
@@ -174,7 +177,7 @@ app.get("/",
 		// Remove hits older than one hour
 		while (
 			uspsHits.length > 0
-			&& now.getTime() - uspsHits[0].getTime() > 60 * 60 * 1000
+			&& now.getTime() - uspsHits[0].getTime() > MINUTE * 60
 		) {
 			uspsHits.shift();
 		}
@@ -185,7 +188,7 @@ app.get("/",
 if (ENABLE_METRICS) {
 	setInterval(() => {
 		console.log(`USPS requests per hour: ${uspsHits.length}`);
-	}, 1000 * 60 * 15);  // Every 15 minutes
+	}, MINUTE * 15);
 }
 
 
