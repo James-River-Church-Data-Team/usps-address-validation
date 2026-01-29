@@ -1,5 +1,3 @@
-import { parse } from "path";
-
 export const PORT = process.env.PORT !== undefined
 	? parseInt(process.env.PORT)
 	: 10_000;
@@ -9,6 +7,10 @@ export const PORT = process.env.PORT !== undefined
 export const CACHE_COUNT = process.env.CACHE_COUNT !== undefined
 	? parseInt(process.env.CACHE_COUNT)
 	: 50_000;
+
+export const ENABLE_METRICS = process.env.ENABLE_METRICS !== undefined
+	? Boolean(process.env.ENABLE_METRICS)
+	: false;
 
 const errors: Error[] = [];
 export const ALLOWED_IPS: string[] = (() => {

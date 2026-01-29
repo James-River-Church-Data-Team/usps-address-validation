@@ -4,7 +4,7 @@ import { backOff } from "exponential-backoff";
 import { LRUMap } from "lru_map";
 import { retryPolicy, ShouldRetry } from "./common.js";
 import { TokenHolder } from "./token-holder.js";
-import { ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, PORT } from "./env.js";
+import { ALLOW_ORIGIN, ALLOWED_IPS, CACHE_COUNT, ENABLE_METRICS, PORT } from "./env.js";
 
 
 interface USPSResBody {
@@ -49,6 +49,8 @@ function validateUspsResponse(uspsBody: unknown): uspsBody is USPSResBody {
 const app = express();
 const cache = new LRUMap<string, USPSResBody>(CACHE_COUNT);
 const tokenHolder = new TokenHolder();
+
+const uspsHits: Date[] = [];
 
 
 app.get("/",
@@ -163,8 +165,26 @@ app.get("/",
 		// Respond back to the user with USPS's response
 		res.json(uspsBody);
 		console.log(" ** ✔ Sent response");
+
+		// Metrics logging
+		const now = new Date();
+		uspsHits.push(now);
+		// Remove hits older than one hour
+		while (
+			uspsHits.length > 0
+			&& now.getTime() - uspsHits[0].getTime() > 60 * 60 * 1000
+		) {
+			uspsHits.shift();
+		}
 	},
 );
+
+
+if (ENABLE_METRICS) {
+	setInterval(() => {
+		console.log(`USPS requests per hour: ${uspsHits.length}`);
+	}, 1000 * 60 * 15);  // Every 15 minutes
+}
 
 
 app.listen(PORT, "0.0.0.0", () => console.log(`Listening on port ${PORT}`));
